@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animeworld.tv charts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <div class="text-center">
+            <h1 class="text-primary">Animeworld.tv charts</h1>
+            <input type="search" class="form-control" id="search" placeholder="id" value="ID Utente">
+            <br>
+            <button onclick="search()" class="btn btn-primary">Search</button>
+            <br>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+            <div style="height:160vh; width:320vw">
+                <canvas id="chart"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--Included scripts-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js" crossorigin="anonymous"></script>
+    <!--Search-->
+    <script>
+        function search() {
+            $.ajax({
+                url: 'search/' + $('#search').val(),
+                type: 'GET',
+                crossDomain: true,
+                success: function (data) {
+                    let total = $(data).find("li.nav-item:nth-child(1) > a:nth-child(1) > span:nth-child(1)").html();
+                    let current = $(data).find("li.nav-item:nth-child(2) > a:nth-child(1) > span:nth-child(1)").html()
+                    let completed = $(data).find("li.nav-item:nth-child(3) > a:nth-child(1) > span:nth-child(1)").html()
+                    let pause = $(data).find("li.nav-item:nth-child(4) > a:nth-child(1) > span:nth-child(1)").html()
+                    let drop = $(data).find("li.nav-item:nth-child(5) > a:nth-child(1) > span:nth-child(1)").html()
+                    let planned = $(data).find("li.nav-item:nth-child(6) > a:nth-child(1) > span:nth-child(1)").html()
+
+                    const ctx = document.getElementById('chart').getContext('2d');
+                    const myChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Totali', 'In corso', 'Completati', 'In pausa', 'Droppati', 'Da guardare'],
+                            datasets: [{
+                                label: '# di voti',
+                                data: [total, current, completed, pause, drop, planned],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        }/*,
+                        options: {
+                            responsive: true
+                        }*/
+                    });
+                }
+            }
+            );
+        }
+    </script>
+    <style>
+        canvas {
+            margin: 0 auto;
+        }
+    </style>
+</body>
+
+</html>
