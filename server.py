@@ -1,5 +1,7 @@
 """Animeworld.tv chart server"""
+from logging import INFO, basicConfig, info
 from socket import socket
+
 from requests import get
 
 
@@ -7,6 +9,7 @@ class Server:
     """HTTP Server"""
 
     def __init__(self, host, port):
+        basicConfig(filename="server.log", level=INFO)
         self.host = host
         self.port = port
         self.sock = socket()
@@ -17,7 +20,8 @@ class Server:
         """Serve HTML"""
         while True:
             try:
-                client = self.sock.accept()[0]
+                client, addr = self.sock.accept()
+                info(f"Client connected: {addr}")
                 client.settimeout(1)
                 data = client.recv(1024).decode().splitlines()
                 data[0] = data[0].split(' ')
