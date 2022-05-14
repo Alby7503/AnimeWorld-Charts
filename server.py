@@ -37,24 +37,25 @@ class Server:
                     path = data[0][1]
                     if path == '/':
                         with open("index.html", 'r', encoding="ascii") as file:
-                            self.http_response(client, 200, "OK", [], file.read()))
-                            client.send(file.read().encode())
+                            self.http_response(
+                                client, 200, "OK", [], file.read())
                     elif path.startswith("/search/"):
-                        code=path.rsplit('/', maxsplit = 1)[1]
-                        client.send(
-                            get("https://www.animeworld.tv/watchlist/" + code).text.encode())
+                        code = path.rsplit('/', maxsplit=1)[1]
+                        self.http_response(client, 200, "OK", [], get(
+                            "https://www.animeworld.tv/watchlist/" + code).text)
                     else:
-                        client.send("HTTP/1.1 404 Not Found\r\n\r\n".encode())
+                        self.http_response(client, 404, "Not Found", [])
                 else:
-                    client.send(b'HTTP/1.1 405 Method Not Allowed\r\n\r\n')
+                    self.http_response(
+                        client, 405, "Method Not Allowed", [])
                 print(data)
             except Exception:
                 continue
 
-    def http_response(self, client, code, message, headers, body):
+    def http_response(self, client, code, message, headers, body=''):
         """HTTP response"""
         headers["content-length"] = len(body)
-        response=f"HTTP/1.1 {code} {message}\r\n"
+        response = f"HTTP/1.1 {code} {message}\r\n"
         for header in headers:
             response += f"{header[0]}: {header[1]}\r\n"
         response += "\r\n"
@@ -62,5 +63,5 @@ class Server:
         client.send(response.encode())
 
 
-environ["PORT"]="80"
+environ["PORT"] = "80"
 Server("0.0.0.0", int(environ["PORT"])).run()
