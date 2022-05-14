@@ -1,6 +1,7 @@
 """Animeworld.tv chart server"""
 from logging import INFO, basicConfig, info
 from socket import socket
+from os import environ
 
 from requests import get
 
@@ -44,4 +45,4 @@ class Server:
                 continue
 
 
-Server("0.0.0.0", 80).run()
+Server("0.0.0.0", environ["PORT"]).run()
