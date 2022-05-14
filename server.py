@@ -8,7 +8,7 @@ from requests import get
 HEADERS = {
     "server": "Socket Server",
     "date": "Tue, 15 Nov 1994 08:12:31 GMT",
-    "content-type": "text/html; charset=UTF-8"
+    "content-type": "text/html; charset=ascii"
 }
 
 
