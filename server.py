@@ -5,6 +5,12 @@ from os import environ
 
 from requests import get
 
+HEADERS = {
+    "server": "Socket Server",
+    "date": "Tue, 15 Nov 1994 08:12:31 GMT",
+    "content-type": "text/html; charset=UTF-8"
+}
+
 
 class Server:
     """HTTP Server"""
@@ -31,9 +37,10 @@ class Server:
                     path = data[0][1]
                     if path == '/':
                         with open("index.html", 'r', encoding="ascii") as file:
+                            self.http_response(client, 200, "OK", [], file.read()))
                             client.send(file.read().encode())
                     elif path.startswith("/search/"):
-                        code = path.rsplit('/', maxsplit=1)[1]
+                        code=path.rsplit('/', maxsplit = 1)[1]
                         client.send(
                             get("https://www.animeworld.tv/watchlist/" + code).text.encode())
                     else:
@@ -44,5 +51,16 @@ class Server:
             except Exception:
                 continue
 
+    def http_response(self, client, code, message, headers, body):
+        """HTTP response"""
+        headers["content-length"] = len(body)
+        response=f"HTTP/1.1 {code} {message}\r\n"
+        for header in headers:
+            response += f"{header[0]}: {header[1]}\r\n"
+        response += "\r\n"
+        response += body
+        client.send(response.encode())
 
+
+environ["PORT"]="80"
 Server("0.0.0.0", int(environ["PORT"])).run()
