@@ -44,4 +44,4 @@ class Server:
                 continue
 
 
-Server("127.0.0.1", 80).run()
+Server("0.0.0.0", 80).run()
