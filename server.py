@@ -26,7 +26,7 @@ class Server:
                 data = client.recv(1024).decode().splitlines()
                 data[0] = data[0].split(' ')
                 method = data[0][0]
-                if method == 'GET':
+                if method == "GET":
                     path = data[0][1]
                     if path == '/':
                         with open("index.html", 'r', encoding="ascii") as file:
