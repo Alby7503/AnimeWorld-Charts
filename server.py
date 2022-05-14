@@ -45,4 +45,4 @@ class Server:
                 continue
 
 
-Server("0.0.0.0", environ["PORT"]).run()
+Server("0.0.0.0", int(environ["PORT"])).run()
