@@ -20,6 +20,7 @@ class Server:
         self.host = host
         self.port = port
         self.sock = socket()
+        self.sock.settimeout(5)
         self.sock.bind((self.host, self.port))
         self.sock.listen(5)
 
